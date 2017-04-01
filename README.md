@@ -3,6 +3,7 @@ http://bit.ly/ion2fullapp-with-functionalities-documentation
 
 # Workflow
 ##To run your app in the browser (great for initial development):
+`npm install`
 `ionic serve`
 
 ##To run on iOS:
@@ -10,6 +11,15 @@ http://bit.ly/ion2fullapp-with-functionalities-documentation
 
 ##To run on Android:
 `ionic run android`
+
+# fix the google map error
+Install the TypeScript Definition Manager CLI151 using npm... 
+`npm install typings --global`
+
+Then use your CLI to navigate into your Ionic 2 project's folder
+
+And finally, install the google map definition files using the typings CLI... 
+`typings install dt~google.maps --global`
 
 ##Review ionic CHANGELOG when updating ionic-angular version
 https://github.com/driftyco/ionic/blob/master/CHANGELOG.md
