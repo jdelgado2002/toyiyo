@@ -5,12 +5,13 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { TermsOfServicePage } from '../terms-of-service/terms-of-service';
 import { PrivacyPolicyPage } from '../privacy-policy/privacy-policy';
 
-import { WalkthroughPage } from '../walkthrough/walkthrough';
+import { LoginPage } from '../login/login';
 
 import 'rxjs/Rx';
 
 import { ProfileModel } from '../profile/profile.model';
 import { ProfileService } from '../profile/profile.service';
+import { AuthService } from '../../providers/auth-service';
 
 @Component({
   selector: 'settings-page',
@@ -19,7 +20,7 @@ import { ProfileService } from '../profile/profile.service';
 export class SettingsPage {
   settingsForm: FormGroup;
   // make WalkthroughPage the root (or first) page
-  rootPage: any = WalkthroughPage;
+  rootPage: any = LoginPage;
   loading: any;
   profile: ProfileModel = new ProfileModel();
 
@@ -27,7 +28,8 @@ export class SettingsPage {
     public nav: NavController,
     public modal: ModalController,
     public loadingCtrl: LoadingController,
-    public profileService: ProfileService
+    public profileService: ProfileService,
+    public AuthService: AuthService
   ) {
     this.loading = this.loadingCtrl.create();
 
@@ -61,8 +63,25 @@ export class SettingsPage {
       });
   }
 
+  onSuccessfulLogout(response) {
+    let env = this;
+    env.loading.dismiss();
+    env.nav.setRoot(this.rootPage);
+
+  }
+
+  onFailedLogout(error) {
+    let env = this;
+    env.loading.dismiss();
+    alert(error);
+  }
+
   logout() {
     // navigate to the new page if it is not the current page
+    let env = this;
+    env.AuthService.logoutUser()
+      .then(authData => env.onSuccessfulLogout(authData))
+      .catch(error => env.onFailedLogout(error));
     this.nav.setRoot(this.rootPage);
   }
 

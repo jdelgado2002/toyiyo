@@ -9,6 +9,8 @@ import { ForgotPasswordPage } from '../forgot-password/forgot-password';
 import { FacebookLoginService } from '../facebook-login/facebook-login.service';
 import { GoogleLoginService } from '../google-login/google-login.service';
 
+import { AuthService } from '../../providers/auth-service';
+
 @Component({
   selector: 'login-page',
   templateUrl: 'login.html'
@@ -23,7 +25,8 @@ export class LoginPage {
     public nav: NavController,
     public facebookLoginService: FacebookLoginService,
     public googleLoginService: GoogleLoginService,
-    public loadingCtrl: LoadingController
+    public loadingCtrl: LoadingController,
+    public authService: AuthService
   ) {
     this.main_page = { component: TabsNavigationPage };
 
@@ -33,7 +36,27 @@ export class LoginPage {
     });
   }
 
+  onSuccessfulLogin(res) {
+    let env = this;
+    console.log(res);
+    env.loading.dismiss();
+    //env.nav.setRoot(env.main_page.component);
+  }
+
+  onFailedLogin(error) {
+    let env = this;
+    console.log(error);
+    env.loading.dismiss();
+    alert(error);
+  }
+
   doLogin(){
+    let env = this;
+    env.loading = this.loadingCtrl.create();
+    env.authService.loginUser(env.login.value.email, env.login.value.password)
+    .then(authData => env.onSuccessfulLogin(authData))
+    .catch(error => env.onFailedLogin(error));
+    
     this.nav.setRoot(this.main_page.component);
   }
 

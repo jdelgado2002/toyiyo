@@ -51,6 +51,7 @@ import { ContactCardPage } from '../pages/contact-card/contact-card';
 import { FacebookLoginService } from '../pages/facebook-login/facebook-login.service';
 import { GoogleLoginService } from '../pages/google-login/google-login.service';
 import { GoogleMapsService } from '../pages/maps/maps.service';
+import { AuthService } from '../providers/auth-service';
 
 
 @NgModule({
@@ -136,7 +137,8 @@ import { GoogleMapsService } from '../pages/maps/maps.service';
 
     FacebookLoginService,
     GoogleLoginService,
-    GoogleMapsService
+    GoogleMapsService,
+    AuthService
   ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })

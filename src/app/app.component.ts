@@ -22,9 +22,8 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
   // make WalkthroughPage the root (or first) page
-  rootPage: any = WalkthroughPage;
+  rootPage: any;
   // rootPage: any = TabsNavigationPage;
-
   pages: Array<{title: string, icon: string, component: any}>;
   pushPages: Array<{title: string, icon: string, component: any}>;
   zone: NgZone;
@@ -32,8 +31,7 @@ export class MyApp {
   constructor(
     platform: Platform,
     public menu: MenuController,
-    public app: App
-  ) {
+    public app: App) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
@@ -60,7 +58,20 @@ export class MyApp {
       storageBucket: "toyiyo-90538.appspot.com",
       messagingSenderId: "398789516846"
     });
-  }  
+
+    this.zone = new NgZone({});
+    const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+        this.zone.run( () => {
+          if (!user) {
+            this.rootPage = LoginPage;
+            unsubscribe();
+          } else {
+            this.rootPage = TabsNavigationPage;
+            unsubscribe();
+          }
+        }); 
+      });  
+    }  
 
   openPage(page) {
     // close the menu when clicking a link from the menu
