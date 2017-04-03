@@ -32,7 +32,7 @@ export class LoginPage {
 
     this.login = new FormGroup({
       email: new FormControl('', Validators.required),
-      password: new FormControl('test', Validators.required)
+      password: new FormControl('', Validators.required)
     });
   }
 
@@ -40,7 +40,7 @@ export class LoginPage {
     let env = this;
     console.log(res);
     env.loading.dismiss();
-    //env.nav.setRoot(env.main_page.component);
+    //env.nav.setRoot(env.main_page.component); -- this is not needed since the app.component is checking for user changes and setting the default page when logged in
   }
 
   onFailedLogin(error) {
@@ -50,13 +50,13 @@ export class LoginPage {
     alert(error);
   }
 
-  doLogin(){
+  doLogin() {
     let env = this;
     env.loading = this.loadingCtrl.create();
     env.authService.loginUser(env.login.value.email, env.login.value.password)
-    .then(authData => env.onSuccessfulLogin(authData))
-    .catch(error => env.onFailedLogin(error));
-    
+      .then(authData => env.onSuccessfulLogin(authData))
+      .catch(error => env.onFailedLogin(error));
+
     this.nav.setRoot(this.main_page.component);
   }
 
@@ -67,19 +67,13 @@ export class LoginPage {
     let env = this;
 
     this.facebookLoginService.getFacebookUser()
-    .then(function(data) {
-       // user is previously logged with FB and we have his data we will let him access the app
-      env.nav.setRoot(env.main_page.component);
-    }, function(error){
-      //we don't have the user data so we will ask him to log in
-      env.facebookLoginService.doFacebookLogin()
-      .then(function(res){
-        env.loading.dismiss();
-        env.nav.setRoot(env.main_page.component);
-      }, function(err){
-        console.log("Facebook Login error", err);
+      .then(res => env.onSuccessfulLogin(res))
+      .catch(error => {
+        //we don't have the user data so we will ask him to log in
+        env.facebookLoginService.doFacebookLogin()
+          .then(res => env.onSuccessfulLogin(res))
+          .catch(err => env.onFailedLogin(err));
       });
-    });
   }
 
   doGoogleLogin() {
@@ -89,19 +83,19 @@ export class LoginPage {
     let env = this;
 
     this.googleLoginService.trySilentLogin()
-    .then(function(data) {
-       // user is previously logged with Google and we have his data we will let him access the app
-      env.nav.setRoot(env.main_page.component);
-    }, function(error){
-      //we don't have the user data so we will ask him to log in
-      env.googleLoginService.doGoogleLogin()
-      .then(function(res){
-        env.loading.dismiss();
+      .then(function (data) {
+        // user is previously logged with Google and we have his data we will let him access the app
         env.nav.setRoot(env.main_page.component);
-      }, function(err){
-        console.log("Google Login error", err);
+      }, function (error) {
+        //we don't have the user data so we will ask him to log in
+        env.googleLoginService.doGoogleLogin()
+          .then(function (res) {
+            env.loading.dismiss();
+            env.nav.setRoot(env.main_page.component);
+          }, function (err) {
+            console.log("Google Login error", err);
+          });
       });
-    });
   }
 
 
