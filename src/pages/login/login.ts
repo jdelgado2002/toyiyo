@@ -38,14 +38,12 @@ export class LoginPage {
 
   onSuccessfulLogin(res) {
     let env = this;
-    console.log(res);
     env.loading.dismiss();
-    //env.nav.setRoot(env.main_page.component); -- this is not needed since the app.component is checking for user changes and setting the default page when logged in
+    env.nav.setRoot(env.main_page.component);
   }
 
   onFailedLogin(error) {
     let env = this;
-    console.log(error);
     env.loading.dismiss();
     alert(error);
   }
@@ -56,8 +54,6 @@ export class LoginPage {
     env.authService.loginUser(env.login.value.email, env.login.value.password)
       .then(authData => env.onSuccessfulLogin(authData))
       .catch(error => env.onFailedLogin(error));
-
-    this.nav.setRoot(this.main_page.component);
   }
 
   doFacebookLogin() {

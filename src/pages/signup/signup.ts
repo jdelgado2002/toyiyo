@@ -10,6 +10,8 @@ import { TabsNavigationPage } from '../tabs-navigation/tabs-navigation';
 import { FacebookLoginService } from '../facebook-login/facebook-login.service';
 import { GoogleLoginService } from '../google-login/google-login.service';
 
+import { AuthService } from '../../providers/auth-service';
+
 @Component({
   selector: 'signup-page',
   templateUrl: 'signup.html'
@@ -24,19 +26,37 @@ export class SignupPage {
     public modal: ModalController,
     public facebookLoginService: FacebookLoginService,
     public googleLoginService: GoogleLoginService,
-    public loadingCtrl: LoadingController
+    public loadingCtrl: LoadingController,
+    public authService: AuthService
   ) {
     this.main_page = { component: TabsNavigationPage };
 
     this.signup = new FormGroup({
       email: new FormControl('', Validators.required),
-      password: new FormControl('test', Validators.required),
-      confirm_password: new FormControl('test', Validators.required)
+      password: new FormControl('', Validators.required),
+      confirm_password: new FormControl('', Validators.required)
     });
   }
 
-  doSignup(){
-    this.nav.setRoot(this.main_page.component);
+  onSuccessfulSignup(res) {
+    let env = this;
+    env.loading.dismiss();
+    //todo: error where setting root inside "then" for promise appears to set navigation twice
+    env.nav.setRoot(env.main_page.component);
+  }
+
+  onFailedSignup(error) {
+    let env = this;
+    env.loading.dismiss();
+    alert(error);
+  }
+
+  doSignup() {
+    let env = this;
+    env.loading = this.loadingCtrl.create();
+    env.authService.signupUser(env.signup.value.email, env.signup.value.password)
+      .then(authData => env.onSuccessfulSignup(authData))
+      .catch(error => env.onFailedSignup(error));
   }
 
   doFacebookSignup() {
@@ -46,20 +66,20 @@ export class SignupPage {
     let env = this;
 
     this.facebookLoginService.getFacebookUser()
-    .then(function(data) {
-       // user is previously logged with FB and we have his data we will let him access the app
-      env.nav.setRoot(env.main_page.component);
-    }, function(error){
-      //we don't have the user data so we will ask him to log in
-      env.facebookLoginService.doFacebookLogin()
-      .then(function(res){
-        env.loading.dismiss();
+      .then(function (data) {
+        // user is previously logged with FB and we have his data we will let him access the app
         env.nav.setRoot(env.main_page.component);
-      }, function(err){
-        console.log("Facebook Login error", err);
-        env.loading.dismiss();
+      }, function (error) {
+        //we don't have the user data so we will ask him to log in
+        env.facebookLoginService.doFacebookLogin()
+          .then(function (res) {
+            env.loading.dismiss();
+            env.nav.setRoot(env.main_page.component);
+          }, function (err) {
+            console.log("Facebook Login error", err);
+            env.loading.dismiss();
+          });
       });
-    });
   }
 
   doGoogleSignup() {
@@ -69,20 +89,20 @@ export class SignupPage {
     let env = this;
 
     this.googleLoginService.trySilentLogin()
-    .then(function(data) {
-       // user is previously logged with Google and we have his data we will let him access the app
-      env.nav.setRoot(env.main_page.component);
-    }, function(error){
-      //we don't have the user data so we will ask him to log in
-      env.googleLoginService.doGoogleLogin()
-      .then(function(res){
-        env.loading.dismiss();
+      .then(function (data) {
+        // user is previously logged with Google and we have his data we will let him access the app
         env.nav.setRoot(env.main_page.component);
-      }, function(err){
-        console.log("Google Login error", err);
-        env.loading.dismiss();
+      }, function (error) {
+        //we don't have the user data so we will ask him to log in
+        env.googleLoginService.doGoogleLogin()
+          .then(function (res) {
+            env.loading.dismiss();
+            env.nav.setRoot(env.main_page.component);
+          }, function (err) {
+            console.log("Google Login error", err);
+            env.loading.dismiss();
+          });
       });
-    });
   }
 
   showTermsModal() {
