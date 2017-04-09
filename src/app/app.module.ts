@@ -52,7 +52,9 @@ import { FacebookLoginService } from '../pages/facebook-login/facebook-login.ser
 import { GoogleLoginService } from '../pages/google-login/google-login.service';
 import { GoogleMapsService } from '../pages/maps/maps.service';
 import { AuthService } from '../providers/auth-service';
-import { CloudSettings, CloudModule } from '@ionic/cloud-angular';
+import { CloudSettings, CloudModule } from '@ionic/cloud-angular'; 
+import { TextToSpeech } from '@ionic-native/text-to-speech';
+
 
 const cloudSettings: CloudSettings = {
   'core': {
@@ -145,7 +147,8 @@ const cloudSettings: CloudSettings = {
     FacebookLoginService,
     GoogleLoginService,
     GoogleMapsService,
-    AuthService
+    AuthService,
+    TextToSpeech
   ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })

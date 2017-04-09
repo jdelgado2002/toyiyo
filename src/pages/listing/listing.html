@@ -30,7 +30,7 @@
   <h4 class="categories-title">Browse categories</h4>
   <ion-row class="grid-categories">
     <ion-col width-50 class="category-item" *ngFor="let category of listing.categories">
-      <background-image tappable class="category-heading" [src]="category.image" (click)="goToFeed(category)">
+      <background-image tappable class="category-heading" [src]="category.image" (click)="sayOutLoud(category.title)">
         <ion-row class="heading-row">
           <ion-col no-padding width-100>
             <h2 class="category-title">{{category.title}}</h2>

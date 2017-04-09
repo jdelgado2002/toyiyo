@@ -6,7 +6,7 @@ import 'rxjs/Rx';
 
 import { ListingModel } from './listing.model';
 import { ListingService } from './listing.service';
-
+import { TextToSpeech } from '@ionic-native/text-to-speech'
 
 @Component({
   selector: 'listing-page',
@@ -19,7 +19,8 @@ export class ListingPage {
   constructor(
     public nav: NavController,
     public listingService: ListingService,
-    public loadingCtrl: LoadingController
+    public loadingCtrl: LoadingController,
+    public TextToSpeech: TextToSpeech
   ) {
     this.loading = this.loadingCtrl.create();
   }
@@ -38,6 +39,14 @@ export class ListingPage {
       });
   }
 
+  sayOutLoud(text:string){
+    try {
+      this.TextToSpeech.speak(text);
+    }
+    catch(e) {
+      console.log(e);
+    }
+  }
 
   goToFeed(category: any) {
     console.log("Clicked goToFeed", category);
