@@ -5,13 +5,17 @@
     <author email="hi@ionicthemes.com" href="https://ionicthemes.com/">Ionic Themes</author>
     <content src="index.html" />
     <access origin="*" />
+    <allow-navigation href="*"/>
+    <allow-intent href="*"/>
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <allow-intent href="tel:*" />
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
+    <allow-intent href="https://*.firebaseio.com"/>
     <platform name="android">
+        <preference name="loadUrlTimeoutValue" value="700000" />
         <allow-intent href="market:*" />
         <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
         <icon density="mdpi" src="resources/android/icon/drawable-mdpi-icon.png" />
